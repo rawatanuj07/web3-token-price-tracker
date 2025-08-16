@@ -45,6 +45,7 @@ export default function Dashboard() {
     price?: number;
     source?: string;
     timestamp?: string;
+    birthDate?: string;
     error?: string;
     lastFetched?: Date;
   }>({});
@@ -64,16 +65,16 @@ export default function Dashboard() {
 
   const sendData = async () => {
     let errorMessage = "";
-  
+
     if (!tokenAddress) errorMessage = "Token address is required";
     else if (!selectedNetwork) errorMessage = "Network is required";
     else if (!timestamp) errorMessage = "Timestamp is required";
-  
+
     if (errorMessage) {
       setPriceData({ error: errorMessage });
       return;
     }
-  
+
     setLoading(true);
     setPriceData({}); // clear previous error
     try {
@@ -82,17 +83,18 @@ export default function Dashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tokenAddress, network: selectedNetwork, timestamp }),
       });
-  
+
       if (!res.ok) {
         const errData = await res.json();
         setPriceData({ error: errData.error || "Failed to fetch price" });
         return;
       }
-  
+
       const data = await res.json();
       setPriceData({
         price: data.price,
         source: data.source,
+        birthDate: data.birthDate, 
         timestamp,
         error: undefined,
         lastFetched: new Date(),
@@ -104,7 +106,7 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white font-sans">
@@ -185,7 +187,9 @@ export default function Dashboard() {
           </Button>
 
           <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold text-white tracking-wide">
-            Token Price Tracker
+          CryptoFlux -<span className="text-lg italic font-sm">Token Price Tracker
+
+</span>
           </h1>
 
           <div className="ml-auto flex items-center gap-4">
@@ -197,7 +201,7 @@ export default function Dashboard() {
         </div>
 
         {/* Main Dashboard */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 max-w-6xl mx-auto">
           {/* Input Section */}
           <Card className="bg-black/30 backdrop-blur-3xl border-white/20 shadow-2xl rounded-2xl">
             <CardHeader>
@@ -211,69 +215,69 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="space-y-2">
-  <Label htmlFor="token-address" className="text-white/80">Token Address</Label>
-  <Input
-    id="token-address"
-    placeholder="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-    value={tokenAddress}
-    onChange={(e) => setTokenAddress(e.target.value)}
-    disabled={loading}
-    className={`bg-white/5 border ${!tokenAddress && priceData.error ? "border-red-500" : "border-white/20"} text-white placeholder:text-white/40 focus:border-purple-400/50 focus:ring-purple-400/20 rounded-xl`}
-  />
-  {!tokenAddress && priceData.error && (
-    <p className="text-red-400 text-xs mt-1">{priceData.error}</p>
-  )}
-</div>
+                <div className="space-y-2">
+                  <Label htmlFor="token-address" className="text-white/80">Token Address</Label>
+                  <Input
+                    id="token-address"
+                    placeholder="0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+                    value={tokenAddress}
+                    onChange={(e) => setTokenAddress(e.target.value)}
+                    disabled={loading}
+                    className={`bg-white/5 border ${!tokenAddress && priceData.error ? "border-red-500" : "border-white/20"} text-white placeholder:text-white/40 focus:border-purple-400/50 focus:ring-purple-400/20 rounded-xl`}
+                  />
+                  {!tokenAddress && priceData.error && (
+                    <p className="text-red-400 text-xs mt-1">{priceData.error}</p>
+                  )}
+                </div>
 
 
-<div className="space-y-2">
-  <Label htmlFor="network" className="text-white/80">Network</Label>
-  <Select
-    value={selectedNetwork}
-    onValueChange={setSelectedNetwork}
-    disabled={loading}
-  >
-    <SelectTrigger
-      className={`bg-white/5 border ${!selectedNetwork && priceData.error ? "border-red-500" : "border-white/20"} text-white rounded-xl`}
-    >
-      <SelectValue placeholder="Select network" />
-    </SelectTrigger>
-    <SelectContent className="bg-slate-800 border-white/20 rounded-xl">
-      {networks.map((network) => (
-        <SelectItem
-          key={network.value}
-          value={network.value}
-          className="text-white hover:bg-white/10 rounded-lg"
-        >
-          <span className="flex items-center gap-2">
-            {network.icon} {network.label}
-          </span>
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-  {!selectedNetwork && priceData.error && (
-    <p className="text-red-400 text-xs mt-1">{priceData.error}</p>
-  )}
-</div>
+                <div className="space-y-2">
+                  <Label htmlFor="network" className="text-white/80">Network</Label>
+                  <Select
+                    value={selectedNetwork}
+                    onValueChange={setSelectedNetwork}
+                    disabled={loading}
+                  >
+                    <SelectTrigger
+                      className={`bg-white/5 border ${!selectedNetwork && priceData.error ? "border-red-500" : "border-white/20"} text-white rounded-xl`}
+                    >
+                      <SelectValue placeholder="Select network" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-white/20 rounded-xl">
+                      {networks.map((network) => (
+                        <SelectItem
+                          key={network.value}
+                          value={network.value}
+                          className="text-white hover:bg-white/10 rounded-lg"
+                        >
+                          <span className="flex items-center gap-2">
+                            {network.icon} {network.label}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {!selectedNetwork && priceData.error && (
+                    <p className="text-red-400 text-xs mt-1">{priceData.error}</p>
+                  )}
+                </div>
 
 
                 {/* Timestamp */}
-<div className="space-y-2">
-  <Label htmlFor="timestamp" className="text-white/80">Timestamp</Label>
-  <Input
-    id="timestamp"
-    type="datetime-local"
-    value={timestamp}
-    onChange={(e) => setTimestamp(e.target.value)}
-    disabled={loading}
-    className={`bg-white/5 border ${!timestamp && priceData.error ? "border-red-500" : "border-white/20"} text-white focus:border-purple-400/50 focus:ring-purple-400/20 rounded-xl`}
-  />
-  {!timestamp && priceData.error && (
-    <p className="text-red-400 text-xs mt-1">{priceData.error}</p>
-  )}
-</div>
+                <div className="space-y-2">
+                  <Label htmlFor="timestamp" className="text-white/80">Timestamp</Label>
+                  <Input
+                    id="timestamp"
+                    type="datetime-local"
+                    value={timestamp}
+                    onChange={(e) => setTimestamp(e.target.value)}
+                    disabled={loading}
+                    className={`bg-white/5 border ${!timestamp && priceData.error ? "border-red-500" : "border-white/20"} text-white focus:border-purple-400/50 focus:ring-purple-400/20 rounded-xl`}
+                  />
+                  {!timestamp && priceData.error && (
+                    <p className="text-red-400 text-xs mt-1">{priceData.error}</p>
+                  )}
+                </div>
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
@@ -310,12 +314,12 @@ export default function Dashboard() {
             {/* Historical Price */}
             <Card className="bg-black/30 backdrop-blur-3xl border-white/20 shadow-2xl rounded-2xl hover:scale-[1.02] transition-transform duration-200">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2 text-lg font-bold">
+                <CardTitle className="text-white mx-auto flex items-center gap-2 text-lg font-bold">
                   <Clock className="w-5 h-5" />
                   Historical Price
                 </CardTitle>
-                <CardDescription className="text-white/60 text-sm">
-                  Time-Stamp:{" "}
+                <CardDescription className="text-white/80 text-md underline mx-auto underline-offset-4">
+                  Timestamp:{" "}
                   {priceData.timestamp
                     ? new Date(priceData.timestamp).toLocaleString("en-IN", {
                       timeZone: "Asia/Kolkata",
@@ -323,25 +327,43 @@ export default function Dashboard() {
                       dateStyle: "medium",
                       timeStyle: "short",
                     })
-                    : "—"}
+                    : "—"} IST
                 </CardDescription>
               </CardHeader>
 
-              <CardContent>
+              <CardContent className="text-center">
                 {priceData.error ? (
                   <div className="text-red-400 font-semibold">{priceData.error}</div>
                 ) : priceData.price ? (
                   <>
-                    <div className="text-3xl font-bold text-white mb-2">
+                    <div className="text-3xl font-bold border border-white w-fit mx-auto px-4 rounded-md text-teal-300/90  mb-2">
                       ${priceData.price.toFixed(6)}
                     </div>
-                    {/* <div className="text-sm text-white/60 mb-2">
-                      {new Date(priceData.timestamp || "").toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-                    </div> */}
-                    <Badge className="mt-2 bg-blue-500/20 text-blue-400 border-blue-500/30">Source: {priceData.source}</Badge>
+
+                    {priceData.birthDate && (
+                      <div className="text-white/80 text-md underline underline-offset-4 mb-2">
+                        Token Birth Date:{" "}
+                        {new Date(priceData.birthDate).toLocaleString("en-IN", {
+                          timeZone: "Asia/Kolkata",
+                          hour12: true,
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </div>
+                    )}
+
+                    <Badge className="my-2 bg-blue-500/10 text-md text-blue-100 border-blue-100">
+                      Source: {priceData.source}
+                    </Badge>
                     {priceData.lastFetched && (
-                      <div className="text-xs text-white/50 mt-1">
-                        Last fetched: {priceData.lastFetched.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true, dateStyle: "medium", timeStyle: "short" })}
+                      <div className="text-xs text-white/80 mt-1">
+                        Fetched on:{" "}
+                        {priceData.lastFetched.toLocaleString("en-IN", {
+                          timeZone: "Asia/Kolkata",
+                          hour12: true,
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
                       </div>
                     )}
                   </>
@@ -351,22 +373,23 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
+
             {/* Current Price */}
             <Card className="bg-black/30 backdrop-blur-3xl border-white/20 shadow-2xl rounded-2xl ring-2 ring-green-500/30 hover:scale-[1.02] transition-transform duration-200">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2 text-lg font-bold">
+              <CardHeader >
+                <CardTitle className="text-white mx-auto flex items-center gap-2 text-lg font-bold">
                   <TrendingUp className="w-5 h-5" />
                   Current Price
                 </CardTitle>
-                <CardDescription className="text-white/60 text-sm">Live price you last searched</CardDescription>
+                <CardDescription className="mx-auto text-white/60 text-sm">Live price you last searched</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="mx-auto">
                 {currentPrice.price ? (
                   <>
                     <div className="text-4xl font-bold text-green-400 mb-2">
-                      ${currentPrice.price.toFixed(6)}
+                    ${(currentPrice.price + 1.0003071).toFixed(6)}  
                     </div>
-                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Latest</Badge>
+                    <Badge className=" mx-auto bg-green-500/20 text-green-400 border-green-500/30">Latest</Badge>
                     <div className="text-sm text-white/60 mt-1">Price as per your last search</div>
                   </>
                 ) : (
@@ -431,9 +454,10 @@ export default function Dashboard() {
               ))}
             </CardContent>
           </Card>
-
+          <p className=" font-bold text-sm mx-auto text-center my-4">© 2025 CryptoTracker. Built with ❤️ by Anuj Rawat</p>
 
         </div>
+
       </div>
     </div>
   );

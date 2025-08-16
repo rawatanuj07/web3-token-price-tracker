@@ -38,10 +38,14 @@ export async function POST(req: NextRequest) {
 
 
     // Getting price or interpolated value
-    const result = await getPriceAtTimestamp(tokenAddress, network, timestamp);
+    const result = await getPriceAtTimestamp(tokenAddress, network, timestamp, );
     console.log("result from api", result)
 
-    return NextResponse.json(result);
+  // Return price + birthDate
+  return NextResponse.json({
+    ...result,
+    birthDate: birthDate.toISOString(), // send as ISO string
+  });
 
   } catch (err) {
     console.error("Error in /api/price:", err);

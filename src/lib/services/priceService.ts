@@ -47,7 +47,7 @@ export async function getPriceAtTimestamp(
   // Try fetching price from Redis cache
   const cached = await redis.get<number>(cacheKey);
   console.log("coming from cache", cached);
-  if (cached) return { price: cached, source: "cache" };
+  if (cached) return { price: cached, source: "redis-cache" };
 
   // Map common network names to Alchemy network identifiers
   const networkMap: Record<string, string> = {
@@ -57,8 +57,9 @@ export async function getPriceAtTimestamp(
     optimism: "opt-mainnet",
     bnb: "bsc-mainnet",
   };
-  const alchemyNetwork = networkMap[network] || network;
-
+  // const alchemyNetwork = networkMap[network] || network;
+  const alchemyNetwork = networkMap[network.toLowerCase()];
+  if (!alchemyNetwork) throw new Error(`Unsupported network: ${network}`);
   const apiKey = process.env.ALCHEMY_API_KEY;
   if (!apiKey) throw new Error("Missing ALCHEMY_API_KEY");
 
