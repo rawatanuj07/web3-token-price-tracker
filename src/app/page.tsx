@@ -414,7 +414,7 @@ export default function Dashboard() {
               {[
                 {
                   name: "alchemy-exact",
-                  color: "blue",
+                  color: "yellow",
                   description: "Exact price at requested timestamp from Alchemy",
                   label: "High accuracy",
                 },
@@ -426,7 +426,7 @@ export default function Dashboard() {
                 },
                 {
                   name: "interpolated",
-                  color: "teal",
+                  color: "cyan",
                   description: "Fallback interpolation when Alchemy data is missing",
                   label: "Estimated",
                 },
