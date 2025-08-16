@@ -94,7 +94,7 @@ export default function Dashboard() {
       setPriceData({
         price: data.price,
         source: data.source,
-        birthDate: data.birthDate, 
+        birthDate: data.birthDate,
         timestamp,
         error: undefined,
         lastFetched: new Date(),
@@ -187,9 +187,9 @@ export default function Dashboard() {
           </Button>
 
           <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold text-white tracking-wide">
-          CryptoFlux -<span className="text-lg italic font-sm">Token Price Tracker
+            CryptoFlux -<span className="text-lg italic font-sm">Token Price Tracker
 
-</span>
+            </span>
           </h1>
 
           <div className="ml-auto flex items-center gap-4">
@@ -387,7 +387,7 @@ export default function Dashboard() {
                 {currentPrice.price ? (
                   <>
                     <div className="text-4xl font-bold text-green-400 mb-2">
-                    ${(currentPrice.price + 1.0003071).toFixed(6)}  
+                      ${(currentPrice.price + 1.0003071).toFixed(6)}
                     </div>
                     <Badge className=" mx-auto bg-green-500/20 text-green-400 border-green-500/30">Latest</Badge>
                     <div className="text-sm text-white/60 mt-1">Price as per your last search</div>
@@ -410,6 +410,7 @@ export default function Dashboard() {
                 Learn where token prices come from
               </CardDescription>
             </CardHeader>
+            // ... existing code ...
             <CardContent className="space-y-3">
               {[
                 {
@@ -436,14 +437,18 @@ export default function Dashboard() {
                   description: "Recently fetched price stored in Redis cache",
                   label: "Fast",
                 },
-              ].map((source) => (
+              ].map((source, index) => (
                 <div
                   key={source.name}
                   className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-200"
                 >
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2 w-full sm:w-auto">
                     <Badge
-                      className={`bg-${source.color}-500/20 text-${source.color}-400 border-${source.color}-500/30 text-xs sm:text-sm`}
+                      className={`${index === 0 ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" :
+                          index === 1 ? "bg-purple-500/20 text-purple-400 border-purple-500/30" :
+                            index === 2 ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" :
+                              "bg-green-500/20 text-green-400 border-green-500/30"
+                        } text-xs sm:text-sm`}
                     >
                       {source.name}
                     </Badge>
@@ -453,6 +458,7 @@ export default function Dashboard() {
                 </div>
               ))}
             </CardContent>
+
           </Card>
           <p className=" font-bold text-sm mx-auto text-center my-4">© 2025 CryptoTracker. Built with ❤️ by Anuj Rawat</p>
 
