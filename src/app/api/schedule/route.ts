@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   // 2️⃣ Generate timestamps, 1 per day from birthdate to today
   const timestamps: string[] = [];
   const today = new Date();
-  let current = new Date(startDate);
+  const current = new Date(startDate);
 
   while (current <= today) {
     timestamps.push(current.toISOString());
