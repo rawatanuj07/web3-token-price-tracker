@@ -11,7 +11,6 @@ import {
   BarChart3,
   Activity,
   Wallet,
-  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,6 +61,34 @@ export default function Dashboard() {
     { value: "arbitrum", label: "Arbitrum", icon: "🔵" },
     { value: "optimism", label: "Optimism", icon: "🔴" },
   ];
+// Inside your Dashboard component
+const schedule = async () => {
+  if (!tokenAddress || !selectedNetwork) {
+    alert("Token and network are required");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await fetch("/api/schedule", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tokenAddress, network: selectedNetwork }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      alert(data.error || "Failed to schedule history");
+    } else {
+      alert("Historical prices scheduled successfully!");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error scheduling historical prices");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const sendData = async () => {
     let errorMessage = "";
@@ -201,7 +228,7 @@ export default function Dashboard() {
         </div>
 
         {/* Main Dashboard */}
-        <div className="p-6 space-y-6 max-w-6xl mx-auto">
+        <div className="p-6 space-y-6 max-w-8xl mx-auto">
           {/* Input Section */}
           <Card className="bg-black/30 backdrop-blur-3xl border-white/20 shadow-2xl rounded-2xl">
             <CardHeader>
@@ -299,7 +326,7 @@ export default function Dashboard() {
                 <Button
                   variant="secondary"
                   className="flex-1 bg-gradient-to-r from-blue-500/80 to-blue-400/60 hover:scale-105 transition-transform duration-200 text-white py-3 rounded-2xl flex items-center justify-center gap-2 shadow-md"
-                  onClick={() => alert("Scheduled full history")}
+                  onClick={schedule}
                   disabled={loading}
                 >
                   <Calendar className="w-4 h-4 mr-2" />
