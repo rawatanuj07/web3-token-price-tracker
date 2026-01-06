@@ -487,7 +487,7 @@ const schedule = async () => {
             </CardContent>
 
           </Card>
-          <p className=" font-bold text-sm mx-auto text-center my-4">© 2025 CryptoTracker. Built with ❤️ by Anuj Rawat</p>
+          <p className=" font-bold text-sm mx-auto text-center my-4">© 2026 CryptoTracker. Built with ❤️ by Anuj Rawat</p>
 
         </div>
 
