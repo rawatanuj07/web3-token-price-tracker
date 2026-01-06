@@ -39,6 +39,7 @@ export const priceWorker = new Worker(
               minTimeout: 3000,  // 1s
               maxTimeout: 15000, // 10s
               onFailedAttempt: (err) => {
+                console.log("error in onFailedAttempt");
                 console.log(
                   `Timestamp ${timestamp} attempt ${err.attemptNumber} failed. ${err.retriesLeft} retries left. Error: ${err.message}`
                 );
